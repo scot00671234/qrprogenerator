@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QR Pro - Generate clean, professional QR codes instantly. Free, fast, and minimalist QR code generator with no watermarks.">
+    <meta name="keywords" content="QR code, generator, free, professional, minimalist, clean, instant">
+    <meta name="author" content="QR Pro">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://qrpro.dev/">
+    <meta property="og:title" content="QR Pro - Professional QR Code Generator">
+    <meta property="og:description" content="Generate clean, professional QR codes instantly. Free, fast, and minimalist QR code generator with no watermarks.">
+    <meta property="og:image" content="https://qrpro.dev/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://qrpro.dev/">
+    <meta property="twitter:title" content="QR Pro - Professional QR Code Generator">
+    <meta property="twitter:description" content="Generate clean, professional QR codes instantly. Free, fast, and minimalist QR code generator with no watermarks.">
+    <meta property="twitter:image" content="https://qrpro.dev/logo.png">
+
+    <title>QR Pro - Professional QR Code Generator</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/src/main.ts" as="script">
+    
+    <!-- Theme color -->
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4669482504741834"
+            crossorigin="anonymous"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #fafafa;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --border: #e5e5e5;
+            --accent: #0070f3;
+            --accent-hover: #0051cc;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #000000;
+                --bg-secondary: #111111;
+                --text-primary: #ffffff;
+                --text-secondary: #a0a0a0;
+                --border: #333333;
+                --accent: #0070f3;
+                --accent-hover: #0051cc;
+            }
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .header {
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #0070f3, #0051cc);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .main {
+            padding: 3rem 0;
+        }
+        
+        .generator-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .input-group {
+            margin-bottom: 2rem;
+        }
+        
+        .label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .option-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .option-group label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--text-secondary);
+        }
+        
+        .option-group select {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        
+        .generate-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .generate-btn:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 2rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .qr-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+        
+        .qr-code {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .download-btn:hover {
+            background: var(--bg-secondary);
+            transform: translateY(-1px);
+        }
+        
+        .footer {
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .ad-container {
+            margin: 2rem 0;
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        
+        .ad-banner {
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .adsbygoogle {
+            display: block !important;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 640px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .generator-card {
+                padding: 1.5rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .ad-container {
+                margin: 1.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">QR</div>
+            <h1 class="title">QR Pro</h1>
+            <p class="subtitle">Generate clean, professional QR codes instantly</p>
+        </header>
+        
+        <main class="main">
+            <!-- Ad Placement 1: Top Banner -->
+            <div class="ad-container ad-banner">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4669482504741834"
+                     data-ad-slot="1234567890"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+            
+            <div class="generator-card">
+                <div class="input-group">
+                    <label for="text-input" class="label">Enter text or URL</label>
+                    <input 
+                        type="text" 
+                        id="text-input" 
+                        class="input" 
+                        placeholder="https://example.com or any text..."
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div class="options">
+                    <div class="option-group">
+                        <label for="size-select">Size</label>
+                        <select id="size-select">
+                            <option value="200">200x200</option>
+                            <option value="300" selected>300x300</option>
+                            <option value="400">400x400</option>
+                            <option value="500">500x500</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="error-level">Error Correction</label>
+                        <select id="error-level">
+                            <option value="L">Low (7%)</option>
+                            <option value="M" selected>Medium (15%)</option>
+                            <option value="Q">Quartile (25%)</option>
+                            <option value="H">High (30%)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="generate-btn" class="generate-btn">
+                    Generate QR Code
+                </button>
+                
+                <div id="result" class="result">
+                    <div class="qr-container">
+                        <canvas id="qr-canvas" class="qr-code"></canvas>
+                    </div>
+                    <a id="download-btn" class="download-btn" download="qr-code.png">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7,10 12,15 17,10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download PNG
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Ad Placement 2: Bottom Banner -->
+            <div class="ad-container ad-banner">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4669482504741834"
+                     data-ad-slot="0987654321"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>QR Pro - Professional QR Code Generator</p>
+        </footer>
+    </div>
+    
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
